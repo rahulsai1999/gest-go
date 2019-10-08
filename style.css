@@ -1,23 +1,23 @@
-body{
+body {
   font-family: "Montserrat", sans-serif;
   margin: 0;
   padding: 0;
 }
 
-#video{
+#video {
   transform: rotateY(180deg);
-  -webkit-transform:rotateY(180deg); /* Safari and Chrome */
-  -moz-transform:rotateY(180deg); /* Firefox */
+  -webkit-transform: rotateY(180deg); /* Safari and Chrome */
+  -moz-transform: rotateY(180deg); /* Firefox */
   position: absolute;
   left: 32.5%;
-  top:5%;
+  top: 5%;
   z-index: 10;
   background-color: black;
   border: 8px solid black;
   border-radius: 5px;
 }
 
-#status{
+#status {
   width: 300px;
   height: 50px;
   background: red;
@@ -26,14 +26,14 @@ body{
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  border:7px solid black;
+  border: 7px solid black;
   border-top: none;
   text-align: center;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
-#status p{
+#status p {
   color: white;
   font-weight: bold;
 }
@@ -47,7 +47,7 @@ h1 {
 
 h1 .subtext {
   font-family: "Montserrat", sans-serif;
-  font-size:14px;
+  font-size: 14px;
   font-weight: normal;
   line-height: 16px;
 }
@@ -56,8 +56,8 @@ h1 .subtext {
   font-size: 30px;
 }
 
-#add-word{
-  border:1px solid #333;
+#add-word {
+  border: 1px solid #333;
   padding: 10px;
   font-size: 12px;
 }
@@ -65,7 +65,7 @@ h1 .subtext {
 .split-left {
   text-align: center;
   height: 100%;
-  left:0;
+  left: 0;
   width: 39.75%;
   position: fixed;
   z-index: 1;
@@ -74,13 +74,12 @@ h1 .subtext {
   padding-top: 20px;
   padding-bottom: 20px;
   border-right: 5px solid black;
-  background:rgb(71, 120, 255);
+  background: rgb(71, 120, 255);
 }
 
-.split-left h1{
+.split-left h1 {
   color: rgb(0, 0, 0);
 }
-
 
 .split-right {
   height: 100%;
@@ -90,7 +89,7 @@ h1 .subtext {
   top: 0;
   overflow-x: hidden;
   padding-top: 20px;
-  right:0;
+  right: 0;
   padding-bottom: 20px;
   border-left: 5px solid black;
   background: white;
@@ -103,13 +102,12 @@ h1 .subtext {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  width:75%;
+  width: 75%;
 }
 
 #info {
   margin-bottom: 30px;
 }
-
 
 #loader,
 #loader:before,
@@ -137,7 +135,7 @@ h1 .subtext {
 #loader:after {
   position: absolute;
   top: 0;
-  content: '';
+  content: "";
 }
 #loader:before {
   left: -1.5em;
