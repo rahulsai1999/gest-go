@@ -8,12 +8,12 @@ const TOPK = 10;
 
 const predictionThreshold = 0.98;
 
-var words = ["alexa", "hello", "other"];
-// var words = ["alexa", "hello", "what is", "the weather", "the time",
+var words = ["Okay Google", "other"];
+// var words = ["Okay Google", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
 // words from above array which act as terminal words in a sentence
-var endWords = ["hello"];
+var endWords = [];
 
 class Main {
   constructor() {
@@ -113,7 +113,7 @@ class Main {
       if (Math.max(...exampleCount) > 0) {
         // if wake word has not been trained
         if (exampleCount[0] == 0) {
-          alert(`You haven't added examples for the wake word ALEXA`);
+          alert(`You haven't added examples for the wake word Okay Google`);
           return;
         }
 
@@ -158,14 +158,14 @@ class Main {
       if (words.length > 3 && endWords.length == 1) {
         console.log("no terminal word added");
         alert(
-          `You have not added any terminal words.\nCurrently the only query you can make is "Alexa, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What's the weather" & "What's the time" then add "the weather" and "the time" as terminal words. "What's" on the other hand is not a terminal word.`
+          `You have not added any terminal words.\nCurrently the only query you can make is "Okay Google, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What's the weather" & "What's the time" then add "the weather" and "the time" as terminal words. "What's" on the other hand is not a terminal word.`
         );
         return;
       }
 
       if (words.length == 3 && endWords.length == 1) {
         var proceed = confirm(
-          "You have not added any words.\n\nThe only query you can currently make is: 'Alexa, hello'"
+          "You have not added any words.\n\nThe only query you can currently make is: 'Okay Google, hello'"
         );
 
         if (!proceed) return;
@@ -177,9 +177,7 @@ class Main {
       this.createButtonList(true);
       this.addWordForm.innerHTML = "";
       let p = document.createElement("p");
-      p.innerText = `Perform the appropriate sign while holding down the ADD EXAMPLE button near each word to capture atleast 30 training examples for each word
-
-      For OTHER, capture yourself in an idle state to act as a catchall sign. e.g hands down by your side`;
+      p.innerText = `Capture different gestures for each command. Press the video to pause the application.`;
       this.addWordForm.appendChild(p);
 
       this.loadKNN();
@@ -189,7 +187,7 @@ class Main {
       this.textLine.innerText = "Step 2: Train";
 
       let subtext = document.createElement("span");
-      subtext.innerHTML = "<br/>Time to associate signs with the words";
+      subtext.innerHTML = "";
       subtext.classList.add("subtext");
       this.textLine.appendChild(subtext);
     });
@@ -262,9 +260,9 @@ class Main {
     const wordText = document.createElement("span");
 
     if (i == 0 && !showBtn) {
-      wordText.innerText = words[i].toUpperCase() + " (wake word) ";
+      wordText.innerText = words[i].toUpperCase() + " (initialization) ";
     } else if (i == words.length - 1 && !showBtn) {
-      wordText.innerText = words[i].toUpperCase() + " (catchall sign) ";
+      wordText.innerText = words[i].toUpperCase() + " (stop word) ";
     } else {
       wordText.innerText = words[i].toUpperCase() + " ";
       wordText.style.fontWeight = "bold";
@@ -467,20 +465,20 @@ class TextToSpeech {
   }
 
   speak(word) {
-    if (word == "alexa") {
+    if (word == "Okay Google") {
       console.log("clear para");
       this.clearPara(true);
 
       setTimeout(() => {
-        // if no query detected after alexa is signed
+        // if no query detected after Okay Google is signed
         if (this.currentPredictedWords.length == 1) {
           this.clearPara(false);
         }
       }, this.waitTimeForQuery);
     }
 
-    if (word != "alexa" && this.currentPredictedWords.length == 0) {
-      console.log("first word should be alexa");
+    if (word != "Okay Google" && this.currentPredictedWords.length == 0) {
+      console.log("first word should be Okay Google");
       console.log(word);
       return;
     }

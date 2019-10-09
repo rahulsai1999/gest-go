@@ -58,8 +58,10 @@ h1 .subtext {
 
 #add-word {
   border: 1px solid #333;
-  padding: 10px;
+  padding: 30px;
   font-size: 12px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .split-left {

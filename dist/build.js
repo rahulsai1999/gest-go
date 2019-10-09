@@ -1,13 +1,11 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-'use strict';
+"use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // Launch in kiosk mode
-// /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --kiosk --app=http://localhost:9966
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _deeplearnKnnImageClassifier = require("deeplearn-knn-image-classifier");
 
-var _deeplearnKnnImageClassifier = require('deeplearn-knn-image-classifier');
-
-var _deeplearn = require('deeplearn');
+var _deeplearn = require("deeplearn");
 
 var dl = _interopRequireWildcard(_deeplearn);
 
@@ -17,20 +15,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// Webcam Image size. Must be 227. 
+// Webcam Image size. Must be 227.
 var IMAGE_SIZE = 227;
 // K value for KNN
 var TOPK = 10;
 
 var predictionThreshold = 0.98;
 
-var words = ["alexa", "hello", "other"];
-// var words = ["alexa", "hello", "what is", "the weather", "the time",
+var words = ["Okay Google", "other"];
+// var words = ["Okay Google", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
-
 // words from above array which act as terminal words in a sentence
-var endWords = ["hello"];
+var endWords = [];
 
 var Main = function () {
   function Main() {
@@ -62,20 +59,20 @@ var Main = function () {
     this.textLine = document.getElementById("text");
 
     // Get video element that will contain the webcam image
-    this.video = document.getElementById('video');
+    this.video = document.getElementById("video");
 
     this.addWordForm = document.getElementById("add-word");
 
     this.statusText = document.getElementById("status-text");
 
-    this.video.addEventListener('mousedown', function () {
+    this.video.addEventListener("mousedown", function () {
       // click on video to go back to training buttons
       main.pausePredicting();
       _this.trainingListDiv.style.display = "block";
     });
 
     // add word to training example set
-    this.addWordForm.addEventListener('submit', function (e) {
+    this.addWordForm.addEventListener("submit", function (e) {
       e.preventDefault();
       var word = document.getElementById("new-word").value.trim().toLowerCase();
       var checkbox = document.getElementById("is-terminal-word");
@@ -87,12 +84,11 @@ var Main = function () {
         _this.updateExampleCount();
         //console.log(words)
 
-
         if (checkbox.checked) {
           endWords.push(word);
         }
 
-        document.getElementById("new-word").value = '';
+        document.getElementById("new-word").value = "";
         checkbox.checked = false;
 
         // console.log(words)
@@ -117,39 +113,38 @@ var Main = function () {
   }
 
   _createClass(Main, [{
-    key: 'createPredictBtn',
+    key: "createPredictBtn",
     value: function createPredictBtn() {
       var _this2 = this;
 
       var div = document.getElementById("action-btn");
       div.innerHTML = "";
-      var predButton = document.createElement('button');
+      var predButton = document.createElement("button");
 
       predButton.innerText = "Start Predicting >>>";
       div.appendChild(predButton);
 
-      predButton.addEventListener('mousedown', function () {
+      predButton.addEventListener("mousedown", function () {
         console.log("start predicting");
         var exampleCount = _this2.knn.getClassExampleCount();
 
         // check if training has been done
         if (Math.max.apply(Math, _toConsumableArray(exampleCount)) > 0) {
-
           // if wake word has not been trained
           if (exampleCount[0] == 0) {
-            alert('You haven\'t added examples for the wake word ALEXA');
+            alert("You haven't added examples for the wake word Okay Google");
             return;
           }
 
           // if the catchall phrase other hasnt been trained
           if (exampleCount[words.length - 1] == 0) {
-            alert('You haven\'t added examples for the catchall sign OTHER.\n\nCapture yourself in idle states e.g hands by your side, empty background etc.\n\nThis prevents words from being erroneously detected.');
+            alert("You haven't added examples for the catchall sign OTHER.\n\nCapture yourself in idle states e.g hands by your side, empty background etc.\n\nThis prevents words from being erroneously detected.");
             return;
           }
 
           // check if atleast one terminal word has been trained
           if (!_this2.areTerminalWordsTrained(exampleCount)) {
-            alert('Add examples for atleast one terminal word.\n\nA terminal word is a word that appears at the end of a query and is necessary to trigger transcribing. e.g What is *the weather*\n\nYour terminal words are: ' + endWords);
+            alert("Add examples for atleast one terminal word.\n\nA terminal word is a word that appears at the end of a query and is necessary to trigger transcribing. e.g What is *the weather*\n\nYour terminal words are: " + endWords);
             return;
           }
 
@@ -158,33 +153,32 @@ var Main = function () {
           _this2.textLine.innerText = "Sign your query";
           _this2.startPredicting();
         } else {
-          alert('You haven\'t added any examples yet.\n\nPress and hold on the "Add Example" button next to each word while performing the sign in front of the webcam.');
+          alert("You haven't added any examples yet.\n\nPress and hold on the \"Add Example\" button next to each word while performing the sign in front of the webcam.");
         }
       });
     }
   }, {
-    key: 'createTrainingBtn',
+    key: "createTrainingBtn",
     value: function createTrainingBtn() {
       var _this3 = this;
 
       var div = document.getElementById("action-btn");
       div.innerHTML = "";
 
-      var trainButton = document.createElement('button');
+      var trainButton = document.createElement("button");
       trainButton.innerText = "Training >>>";
       div.appendChild(trainButton);
 
-      trainButton.addEventListener('mousedown', function () {
-
+      trainButton.addEventListener("mousedown", function () {
         // check if user has added atleast one terminal word
         if (words.length > 3 && endWords.length == 1) {
-          console.log('no terminal word added');
-          alert('You have not added any terminal words.\nCurrently the only query you can make is "Alexa, hello".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask "What\'s the weather" & "What\'s the time" then add "the weather" and "the time" as terminal words. "What\'s" on the other hand is not a terminal word.');
+          console.log("no terminal word added");
+          alert("You have not added any terminal words.\nCurrently the only query you can make is \"Okay Google, hello\".\n\nA terminal word is a word that will appear in the end of your query.\nIf you intend to ask \"What's the weather\" & \"What's the time\" then add \"the weather\" and \"the time\" as terminal words. \"What's\" on the other hand is not a terminal word.");
           return;
         }
 
         if (words.length == 3 && endWords.length == 1) {
-          var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Alexa, hello'");
+          var proceed = confirm("You have not added any words.\n\nThe only query you can currently make is: 'Okay Google, hello'");
 
           if (!proceed) return;
         }
@@ -193,9 +187,9 @@ var Main = function () {
 
         console.log("ready to train");
         _this3.createButtonList(true);
-        _this3.addWordForm.innerHTML = '';
-        var p = document.createElement('p');
-        p.innerText = 'Perform the appropriate sign while holding down the ADD EXAMPLE button near each word to capture atleast 30 training examples for each word\n\n      For OTHER, capture yourself in an idle state to act as a catchall sign. e.g hands down by your side';
+        _this3.addWordForm.innerHTML = "";
+        var p = document.createElement("p");
+        p.innerText = "Capture different gestures for each command. Press the video to pause the application.";
         _this3.addWordForm.appendChild(p);
 
         _this3.loadKNN();
@@ -204,16 +198,15 @@ var Main = function () {
 
         _this3.textLine.innerText = "Step 2: Train";
 
-        var subtext = document.createElement('span');
-        subtext.innerHTML = "<br/>Time to associate signs with the words";
-        subtext.classList.add('subtext');
+        var subtext = document.createElement("span");
+        subtext.innerHTML = "";
+        subtext.classList.add("subtext");
         _this3.textLine.appendChild(subtext);
       });
     }
   }, {
-    key: 'areTerminalWordsTrained',
+    key: "areTerminalWordsTrained",
     value: function areTerminalWordsTrained(exampleCount) {
-
       var totalTerminalWordsTrained = 0;
 
       for (var i = 0; i < words.length; i++) {
@@ -227,26 +220,26 @@ var Main = function () {
       return totalTerminalWordsTrained;
     }
   }, {
-    key: 'startWebcam',
+    key: "startWebcam",
     value: function startWebcam() {
       var _this4 = this;
 
       // Setup webcam
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false }).then(function (stream) {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false }).then(function (stream) {
         _this4.video.srcObject = stream;
         _this4.video.width = IMAGE_SIZE;
         _this4.video.height = IMAGE_SIZE;
 
-        _this4.video.addEventListener('playing', function () {
+        _this4.video.addEventListener("playing", function () {
           return _this4.videoPlaying = true;
         });
-        _this4.video.addEventListener('paused', function () {
+        _this4.video.addEventListener("paused", function () {
           return _this4.videoPlaying = false;
         });
       });
     }
   }, {
-    key: 'loadKNN',
+    key: "loadKNN",
     value: function loadKNN() {
       var _this5 = this;
 
@@ -258,40 +251,40 @@ var Main = function () {
       });
     }
   }, {
-    key: 'updateExampleCount',
+    key: "updateExampleCount",
     value: function updateExampleCount() {
-      var p = document.getElementById('count');
-      p.innerText = 'Training: ' + words.length + ' words';
+      var p = document.getElementById("count");
+      p.innerText = "Training: " + words.length + " words";
     }
   }, {
-    key: 'createButtonList',
+    key: "createButtonList",
     value: function createButtonList(showBtn) {
       //showBtn - true: show training btns, false:show only text
 
       // Clear List
       this.exampleListDiv.innerHTML = "";
 
-      // Create training buttons and info texts    
+      // Create training buttons and info texts
       for (var i = 0; i < words.length; i++) {
         this.createButton(i, showBtn);
       }
     }
   }, {
-    key: 'createButton',
+    key: "createButton",
     value: function createButton(i, showBtn) {
       var _this6 = this;
 
-      var div = document.createElement('div');
+      var div = document.createElement("div");
       this.exampleListDiv.appendChild(div);
-      div.style.marginBottom = '10px';
+      div.style.marginBottom = "10px";
 
       // Create Word Text
-      var wordText = document.createElement('span');
+      var wordText = document.createElement("span");
 
       if (i == 0 && !showBtn) {
-        wordText.innerText = words[i].toUpperCase() + " (wake word) ";
+        wordText.innerText = words[i].toUpperCase() + " (initialization) ";
       } else if (i == words.length - 1 && !showBtn) {
-        wordText.innerText = words[i].toUpperCase() + " (catchall sign) ";
+        wordText.innerText = words[i].toUpperCase() + " (stop word) ";
       } else {
         wordText.innerText = words[i].toUpperCase() + " ";
         wordText.style.fontWeight = "bold";
@@ -301,38 +294,38 @@ var Main = function () {
 
       if (showBtn) {
         // Create training button
-        var button = document.createElement('button');
+        var button = document.createElement("button");
         button.innerText = "Add Example"; //"Train " + words[i].toUpperCase()
         div.appendChild(button);
 
         // Listen for mouse events when clicking the button
-        button.addEventListener('mousedown', function () {
+        button.addEventListener("mousedown", function () {
           return _this6.training = i;
         });
-        button.addEventListener('mouseup', function () {
+        button.addEventListener("mouseup", function () {
           return _this6.training = -1;
         });
 
         // Create clear button to emove training examples
-        var btn = document.createElement('button');
+        var btn = document.createElement("button");
         btn.innerText = "Clear"; //`Clear ${words[i].toUpperCase()}`
         div.appendChild(btn);
 
-        btn.addEventListener('mousedown', function () {
+        btn.addEventListener("mousedown", function () {
           console.log("clear training data for this label");
           _this6.knn.clearClass(i);
           _this6.infoTexts[i].innerText = " 0 examples";
         });
 
         // Create info text
-        var infoText = document.createElement('span');
+        var infoText = document.createElement("span");
         infoText.innerText = " 0 examples";
         div.appendChild(infoText);
         this.infoTexts.push(infoText);
       }
     }
   }, {
-    key: 'startTraining',
+    key: "startTraining",
     value: function startTraining() {
       if (this.timer) {
         this.stopTraining();
@@ -349,13 +342,13 @@ var Main = function () {
       this.timer = requestAnimationFrame(this.train.bind(this));
     }
   }, {
-    key: 'stopTraining',
+    key: "stopTraining",
     value: function stopTraining() {
       this.video.pause();
       cancelAnimationFrame(this.timer);
     }
   }, {
-    key: 'train',
+    key: "train",
     value: function train() {
       if (this.videoPlaying) {
         // Get image data from video element
@@ -372,7 +365,7 @@ var Main = function () {
         if (Math.max.apply(Math, _toConsumableArray(exampleCount)) > 0) {
           for (var i = 0; i < words.length; i++) {
             if (exampleCount[i] > 0) {
-              this.infoTexts[i].innerText = ' ' + exampleCount[i] + ' examples';
+              this.infoTexts[i].innerText = " " + exampleCount[i] + " examples";
             }
           }
         }
@@ -380,7 +373,7 @@ var Main = function () {
       this.timer = requestAnimationFrame(this.train.bind(this));
     }
   }, {
-    key: 'startPredicting',
+    key: "startPredicting",
     value: function startPredicting() {
       // stop training
       if (this.timer) {
@@ -395,14 +388,14 @@ var Main = function () {
       this.pred = requestAnimationFrame(this.predict.bind(this));
     }
   }, {
-    key: 'pausePredicting',
+    key: "pausePredicting",
     value: function pausePredicting() {
       console.log("pause predicting");
       this.setStatusText("Status: Paused Predicting");
       cancelAnimationFrame(this.pred);
     }
   }, {
-    key: 'predict',
+    key: "predict",
     value: function predict() {
       var _this7 = this;
 
@@ -410,7 +403,6 @@ var Main = function () {
       this.elapsed = this.now - this.then;
 
       if (this.elapsed > this.fpsInterval) {
-
         this.then = this.now - this.elapsed % this.fpsInterval;
 
         if (this.videoPlaying) {
@@ -421,11 +413,9 @@ var Main = function () {
           if (Math.max.apply(Math, _toConsumableArray(exampleCount)) > 0) {
             this.knn.predictClass(image).then(function (res) {
               for (var i = 0; i < words.length; i++) {
-
                 // if matches & is above threshold & isnt same as prev prediction
                 // and is not the last class which is a catch all class
                 if (res.classIndex == i && res.confidences[i] > predictionThreshold && res.classIndex != _this7.previousPrediction && res.classIndex != words.length - 1) {
-
                   _this7.tts.speak(words[i]);
 
                   // set previous prediction so it doesnt get called again
@@ -444,7 +434,7 @@ var Main = function () {
       this.pred = requestAnimationFrame(this.predict.bind(this));
     }
   }, {
-    key: 'setStatusText',
+    key: "setStatusText",
     value: function setStatusText(status) {
       document.getElementById("status").style.display = "block";
       this.statusText.innerText = status;
@@ -480,25 +470,25 @@ var TextToSpeech = function () {
   }
 
   _createClass(TextToSpeech, [{
-    key: 'populateVoiceList',
+    key: "populateVoiceList",
     value: function populateVoiceList() {
-      if (typeof speechSynthesis === 'undefined') {
+      if (typeof speechSynthesis === "undefined") {
         console.log("no synth");
         return;
       }
       this.voices = this.synth.getVoices();
 
       if (this.voices.indexOf(this.selectedVoice) > 0) {
-        console.log(this.voices[this.selectedVoice].name + ':' + this.voices[this.selectedVoice].lang);
+        console.log(this.voices[this.selectedVoice].name + ":" + this.voices[this.selectedVoice].lang);
       } else {
         //alert("Selected voice for speech did not load or does not exist.\nCheck Internet Connection")
       }
     }
   }, {
-    key: 'clearPara',
+    key: "clearPara",
     value: function clearPara(queryDetected) {
-      this.textLine.innerText = '';
-      this.ansText.innerText = '';
+      this.textLine.innerText = "";
+      this.ansText.innerText = "";
       if (queryDetected) {
         this.loader.style.display = "block";
       } else {
@@ -509,24 +499,24 @@ var TextToSpeech = function () {
       this.currentPredictedWords = [];
     }
   }, {
-    key: 'speak',
+    key: "speak",
     value: function speak(word) {
       var _this9 = this;
 
-      if (word == 'alexa') {
+      if (word == "Okay Google") {
         console.log("clear para");
         this.clearPara(true);
 
         setTimeout(function () {
-          // if no query detected after alexa is signed
+          // if no query detected after Okay Google is signed
           if (_this9.currentPredictedWords.length == 1) {
             _this9.clearPara(false);
           }
         }, this.waitTimeForQuery);
       }
 
-      if (word != 'alexa' && this.currentPredictedWords.length == 0) {
-        console.log("first word should be alexa");
+      if (word != "Okay Google" && this.currentPredictedWords.length == 0) {
+        console.log("first word should be Okay Google");
         console.log(word);
         return;
       }
@@ -545,7 +535,7 @@ var TextToSpeech = function () {
 
       this.currentPredictedWords.push(word);
 
-      this.textLine.innerText += ' ' + word;
+      this.textLine.innerText += " " + word;
 
       var utterThis = new SpeechSynthesisUtterance(word);
 
@@ -585,7 +575,7 @@ var SpeechToText = function () {
     this.interimTextLine = document.getElementById("interimText");
     this.textLine = document.getElementById("answerText");
     this.loader = document.getElementById("loader");
-    this.finalTranscript = '';
+    this.finalTranscript = "";
     this.recognizing = false;
 
     this.recognition = new webkitSpeechRecognition();
@@ -593,7 +583,7 @@ var SpeechToText = function () {
     this.recognition.continuous = true;
     this.recognition.interimResults = true;
 
-    this.recognition.lang = 'en-US';
+    this.recognition.lang = "en-US";
 
     this.cutOffTime = 15000; // cut off speech to text after
 
@@ -622,8 +612,8 @@ var SpeechToText = function () {
     };
 
     this.recognition.onresult = function (event) {
-      var interim_transcript = '';
-      if (typeof event.results == 'undefined') {
+      var interim_transcript = "";
+      if (typeof event.results == "undefined") {
         return;
       }
 
@@ -649,7 +639,7 @@ var SpeechToText = function () {
   }
 
   _createClass(SpeechToText, [{
-    key: 'startListening',
+    key: "startListening",
     value: function startListening() {
       if (this.recognizing) {
         this.recognition.stop();
@@ -663,7 +653,7 @@ var SpeechToText = function () {
       this.recognition.start();
     }
   }, {
-    key: 'stopListening',
+    key: "stopListening",
     value: function stopListening() {
       console.log("STOP LISTENING");
       if (this.recognizing) {
@@ -676,13 +666,13 @@ var SpeechToText = function () {
       }
     }
   }, {
-    key: 'interimType',
+    key: "interimType",
     value: function interimType(text) {
       this.loader.style.display = "none";
       this.interimTextLine.innerText = text;
     }
   }, {
-    key: 'type',
+    key: "type",
     value: function type(text) {
       this.loader.style.display = "none";
       this.textLine.innerText = text;
@@ -694,8 +684,7 @@ var SpeechToText = function () {
 
 var main = null;
 
-window.addEventListener('load', function () {
-
+window.addEventListener("load", function () {
   var ua = navigator.userAgent.toLowerCase();
 
   if (!(ua.indexOf("chrome") != -1 || ua.indexOf("firefox") != -1)) {
@@ -20715,7 +20704,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 // The following constants are related to IEEE 754 limits.
 //
-var global = this,
+
+// Detect the global object, even if operating in strict mode.
+// http://stackoverflow.com/a/14387057/265298
+var global = (0, eval)('this'),
     width = 256,        // each RC4 output is 0 <= x < 256
     chunks = 6,         // at least six RC4 outputs for each double
     digits = 52,        // there are 52 significant digits in a double

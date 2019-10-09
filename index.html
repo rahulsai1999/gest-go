@@ -1,61 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Gesture Recognition</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css'/>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="toggle.css">
-    <script src="dist/build.js"></script> 
-    
-</head>
-<body>
-  <div id="status">
-    <p id="status-text">Status: Not Ready</p>
-  </div>
-  <video id="video" src='' muted autoplay playsinline></video>
-  <div class="split-left">
-    <div class="centered">
-      <h1 id="text" class="intro-steps">Step 1: Enter Words<br><span class="subtext">Add a few words below. In the next step we'll associate each word with signs from the webcam</h1>
-      <div id="training-list">
-        <div id="example-list"></div>
-        <div id="add">
-          <form id="add-word" autocomplete="off">
-            <input type="text" id="new-word" placeholder="Add Training word">
-            <br/><br/>
-            <span class="word-choice">Normal</span>
-            <label class="switch">
-              <input type="checkbox" id="is-terminal-word">
-              <span class="slider round"></span>
-            </label>
-            <span class="word-choice">Terminal</span>
-            <br/><br/>
-            <input type="submit" value="Add Word">
-            <p><b>Terminal Word</b> - A word that appears as the last word in your query</p>
-            <p>e.g If you intend to ask "What's <b><em>the weather</em></b>?" & "What's <b><em>the time</em></b>?" then <b><em>the weather</em></b> and <b><em>the time</em></b> are terminal words whereas <b><em>what's</em></b> is not</p>
-          </form>
-        </div>
-        <p id="count">Training: 2 words</p>
-        <div id="action-btn"></div>
-      </div>
-      
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="toggle.css" />
+    <script src="dist/build.js"></script>
+  </head>
+  <body>
+    <div id="status">
+      <p id="status-text">Status: Not Ready</p>
     </div>
-  </div>
-  <div class="split-right">
-    <div class="centered">
-      <div id="loader"></div>
-      <h1>
-        <span id="answerText"></span>
-        <span id="interimText"></span>
-      </h1>
-    </div>
-  </div>
-  
-  
-  
+    <video id="video" src="" muted autoplay playsinline></video>
+    <div class="split-left">
+      <div class="centered">
+        <h1 id="text" class="intro-steps">Step 1: Enter Words<br /></h1>
+        <br />
+        <div id="training-list">
+          <div id="example-list"></div>
+          <br />
+          <div id="add">
+            <form id="add-word" autocomplete="off">
+              <input
+                type="text"
+                id="new-word"
+                class="form-input"
+                placeholder="Add Training word"
+              />
+              <br /><br />
 
-</body>
+              <span><b>Normal&nbsp;&nbsp;</b></span>
+              <label class="switch">
+                <input type="checkbox" id="is-terminal-word" />
+                <span class="slider round"></span>
+              </label>
+              <span><b>&nbsp;&nbsp;Terminal</b></span>
+
+              <br /><br />
+              <input class="btn btn-danger" type="submit" value="Add Word" />
+              <br /><br />
+              <p>
+                <b>Terminal Word</b> - A word that appears as the last word in
+                your query
+              </p>
+              <p>
+                <b>For Example : What's my schedule?</b>
+              </p>
+              <p><b>What's</b> : Normal Word</p>
+              <p><b>my schedule?</b> : Terminal Word</p>
+            </form>
+          </div>
+          <p id="count">Training: 2 words</p>
+          <div id="action-btn"></div>
+        </div>
+      </div>
+    </div>
+    <div class="split-right">
+      <div class="centered">
+        <div id="loader"></div>
+        <h1>
+          <span id="answerText"></span>
+          <span id="interimText"></span>
+        </h1>
+      </div>
+    </div>
+  </body>
 </html>
